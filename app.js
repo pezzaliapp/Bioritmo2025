@@ -36,7 +36,11 @@ function calculateBiorhythm() {
     const emotional = Math.sin((2 * Math.PI * daysLived) / 28);
     const intellectual = Math.sin((2 * Math.PI * daysLived) / 33);
 
-    // Mostra i risultati
+    // Aggiorna la sezione dei risultati
+    updateResults(physical, emotional, intellectual);
+}
+
+function updateResults(physical, emotional, intellectual) {
     const resultsDiv = document.getElementById('output');
     resultsDiv.innerHTML = `
         <h2>Biorhythm Results</h2>
