@@ -25,17 +25,17 @@
         <form id="biorhythm-form">
             <div class="form-group">
                 <label for="birthdate">Date of Birth:</label>
-                <input type="date" id="birthdate" name="birthdate" required>
+                <input type="date" id="birthdate" name="birthdate" required placeholder="Select your birth date">
             </div>
             <div class="form-group">
                 <label for="target-date">Target Date:</label>
-                <input type="date" id="target-date" name="target-date" value="">
+                <input type="date" id="target-date" name="target-date" value="" placeholder="Select your target date">
             </div>
-            <button type="button" id="calculate-btn">Calculate</button>
+            <button type="button" id="calculate-btn" disabled>Calculate</button>
         </form>
         <div id="output">
             <h2>Results:</h2>
-            <p>Results will appear here after calculation.</p>
+            <p>Enter your birthdate and target date to see your biorhythms.</p>
         </div>
     </main>
     <footer>
