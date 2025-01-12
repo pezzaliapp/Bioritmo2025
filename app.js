@@ -41,6 +41,11 @@ function calculateBiorhythm() {
 function displayChart(daysLived, physical, emotional, intellectual) {
     const ctx = document.getElementById('biorhythm-chart').getContext('2d');
 
+    // Rimuove eventuali grafici precedenti
+    if (Chart.getChart(ctx)) {
+        Chart.getChart(ctx).destroy();
+    }
+
     // Genera le etichette per il grafico (30 giorni attorno alla data target)
     const labels = Array.from({ length: 30 }, (_, i) => `Day ${i - 15}`);
     const physicalData = labels.map((_, i) =>
@@ -94,16 +99,16 @@ function downloadPDF() {
     try {
         // Recupera il canvas
         const canvas = document.getElementById('biorhythm-chart');
-        
+
         // Verifica che il grafico esista
         if (!canvas) {
             throw new Error("Canvas non trovato. Assicurati di aver calcolato il bioritmo.");
         }
-        
+
         // Converte il canvas in immagine
         const imgData = canvas.toDataURL('image/png');
-        if (!imgData) {
-            throw new Error("Non è possibile convertire il grafico in immagine.");
+        if (!imgData || imgData === "data:,") {
+            throw new Error("Il grafico non è stato generato correttamente.");
         }
 
         // Crea un nuovo documento PDF
