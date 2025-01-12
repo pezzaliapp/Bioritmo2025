@@ -10,7 +10,7 @@
     <link rel="icon" type="image/png" sizes="192x192" href="images/icon-192x192.png">
     <link rel="icon" type="image/png" sizes="512x512" href="images/icon-512x512.png">
 
-    <!-- Apple Touch Icon (per iOS) -->
+    <!-- Apple Touch Icon -->
     <link rel="apple-touch-icon" href="images/icon-192x192.png">
 
     <title>Biorhythm Calculator</title>
@@ -25,23 +25,23 @@
     </header>
     <main>
         <form id="biorhythm-form">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
-            
             <label for="birthdate">Date of Birth:</label>
             <input type="date" id="birthdate" name="birthdate" required>
-            
+
             <label for="target-date">Target Date:</label>
             <input type="date" id="target-date" name="target-date" value="">
-            
+
             <button type="button" id="calculate-btn">Calculate</button>
         </form>
         <div id="output">
             <h2>Results:</h2>
-            <canvas id="biorhythm-chart" width="400" height="300"></canvas>
-            <button id="download-pdf">Download PDF</button>
+            <p>Results will appear here after calculation.</p>
         </div>
+        <button id="download-pdf">Download PDF</button>
     </main>
+    <footer>
+        <p>&copy; 2025 Biorhythm Calculator. All rights reserved.</p>
+    </footer>
     <script src="app.js"></script>
 </body>
 </html>
