@@ -86,9 +86,17 @@ function displayChart(daysLived, physical, emotional, intellectual) {
 }
 
 function downloadPDF() {
-    const canvas = document.getElementById('biorhythm-chart');
-    const pdf = new jsPDF();
-    pdf.text("Biorhythm Results", 10, 10);
-    pdf.addImage(canvas.toDataURL(), 'PNG', 10, 20, 180, 90);
-    pdf.save('biorhythm.pdf');
+    try {
+        const canvas = document.getElementById('biorhythm-chart');
+        if (!canvas) throw new Error("Canvas not found.");
+
+        const imgData = canvas.toDataURL('image/png'); // Converte il canvas in immagine
+        const pdf = new jsPDF();
+        pdf.text("Biorhythm Results", 10, 10); // Titolo nel PDF
+        pdf.addImage(imgData, 'PNG', 10, 20, 180, 90); // Aggiunge l'immagine al PDF
+        pdf.save('biorhythm.pdf'); // Scarica il PDF
+    } catch (err) {
+        console.error("Error during PDF generation:", err);
+        alert("An error occurred while generating the PDF. Please try again.");
+    }
 }
