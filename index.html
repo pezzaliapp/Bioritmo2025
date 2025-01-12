@@ -15,29 +15,30 @@
 
     <title>Biorhythm Calculator</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 </head>
 <body>
     <header>
         <h1>Biorhythm Calculator</h1>
-        <p>This app calculates your biorhythms based on your birthdate. Note: This is for entertainment purposes only.</p>
+        <p>Discover your physical, emotional, and intellectual cycles.</p>
     </header>
     <main>
         <form id="biorhythm-form">
-            <label for="birthdate">Date of Birth:</label>
-            <input type="date" id="birthdate" name="birthdate" required>
-
-            <label for="target-date">Target Date:</label>
-            <input type="date" id="target-date" name="target-date" value="">
-
-            <button type="button" id="calculate-btn">Calculate</button>
+            <div class="form-group">
+                <label for="birthdate">Date of Birth:</label>
+                <input type="date" id="birthdate" name="birthdate" required>
+            </div>
+            <div class="form-group">
+                <label for="target-date">Target Date:</label>
+                <input type="date" id="target-date" name="target-date" value="">
+            </div>
+            <div class="form-group">
+                <button type="button" id="calculate-btn">Calculate</button>
+            </div>
         </form>
         <div id="output">
             <h2>Results:</h2>
             <p>Results will appear here after calculation.</p>
         </div>
-        <button id="download-pdf">Download PDF</button>
     </main>
     <footer>
         <p>&copy; 2025 Biorhythm Calculator. All rights reserved.</p>
