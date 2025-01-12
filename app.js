@@ -9,6 +9,8 @@ if ('serviceWorker' in navigator) {
 document.getElementById('calculate-btn').addEventListener('click', calculateBiorhythm);
 document.getElementById('download-pdf').addEventListener('click', downloadPDF);
 
+let biorhythmResults = {}; // Salva i risultati per generare il PDF
+
 function calculateBiorhythm() {
     const birthdateInput = document.getElementById('birthdate');
     const targetDateInput = document.getElementById('target-date');
@@ -35,89 +37,68 @@ function calculateBiorhythm() {
     const emotional = Math.sin((2 * Math.PI * daysLived) / 28);
     const intellectual = Math.sin((2 * Math.PI * daysLived) / 33);
 
-    displayChart(daysLived, physical, emotional, intellectual);
+    // Salva i risultati per il PDF
+    biorhythmResults = {
+        birthdate: birthdate.toDateString(),
+        targetDate: targetDate.toDateString(),
+        physical: (physical * 100).toFixed(2),
+        emotional: (emotional * 100).toFixed(2),
+        intellectual: (intellectual * 100).toFixed(2),
+    };
+
+    // Mostra i risultati nella pagina
+    const resultsDiv = document.getElementById('output');
+    resultsDiv.innerHTML = `
+        <h2>Biorhythm Results</h2>
+        <p><strong>Birth Date:</strong> ${biorhythmResults.birthdate}</p>
+        <p><strong>Target Date:</strong> ${biorhythmResults.targetDate}</p>
+        <p><strong>Physical:</strong> ${biorhythmResults.physical}%</p>
+        <p><strong>Emotional:</strong> ${biorhythmResults.emotional}%</p>
+        <p><strong>Intellectual:</strong> ${biorhythmResults.intellectual}%</p>
+        <h3>Analysis:</h3>
+        <p>${generateAnalysis(biorhythmResults)}</p>
+    `;
 }
 
-function displayChart(daysLived, physical, emotional, intellectual) {
-    const ctx = document.getElementById('biorhythm-chart').getContext('2d');
+function generateAnalysis(results) {
+    let analysis = `On the target date (${results.targetDate}), `;
+    analysis += `your physical cycle is at ${results.physical}%, `;
+    analysis += `your emotional cycle is at ${results.emotional}%, `;
+    analysis += `and your intellectual cycle is at ${results.intellectual}%. `;
 
-    // Rimuove eventuali grafici precedenti
-    if (Chart.getChart(ctx)) {
-        Chart.getChart(ctx).destroy();
+    if (results.physical > 80) {
+        analysis += "You are physically very energetic and ready for challenges.";
+    } else if (results.physical < 20) {
+        analysis += "You might feel physically tired or less motivated today.";
     }
 
-    // Genera le etichette per il grafico (30 giorni attorno alla data target)
-    const labels = Array.from({ length: 30 }, (_, i) => `Day ${i - 15}`);
-    const physicalData = labels.map((_, i) =>
-        Math.sin((2 * Math.PI * (daysLived + i - 15)) / 23)
-    );
-    const emotionalData = labels.map((_, i) =>
-        Math.sin((2 * Math.PI * (daysLived + i - 15)) / 28)
-    );
-    const intellectualData = labels.map((_, i) =>
-        Math.sin((2 * Math.PI * (daysLived + i - 15)) / 33)
-    );
+    if (results.emotional > 80) {
+        analysis += " Emotionally, you are very positive and in a great mood.";
+    } else if (results.emotional < 20) {
+        analysis += " You might feel emotionally sensitive or withdrawn.";
 
-    // Genera il grafico con Chart.js
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels,
-            datasets: [
-                {
-                    label: 'Physical',
-                    data: physicalData,
-                    borderColor: 'red',
-                    fill: false
-                },
-                {
-                    label: 'Emotional',
-                    data: emotionalData,
-                    borderColor: 'blue',
-                    fill: false
-                },
-                {
-                    label: 'Intellectual',
-                    data: intellectualData,
-                    borderColor: 'green',
-                    fill: false
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'top'
-                }
-            }
-        }
-    });
+    if (results.intellectual > 80) {
+        analysis += " Intellectually, your mind is sharp and ready for problem-solving.";
+    } else if (results.intellectual < 20) {
+        analysis += " You might find it harder to focus or process complex ideas.";
+    }
+
+    return analysis;
 }
 
 function downloadPDF() {
     try {
-        // Recupera il canvas
-        const canvas = document.getElementById('biorhythm-chart');
-
-        // Verifica che il grafico esista
-        if (!canvas) {
-            throw new Error("Canvas non trovato. Assicurati di aver calcolato il bioritmo.");
-        }
-
-        // Converte il canvas in immagine
-        const imgData = canvas.toDataURL('image/png');
-        if (!imgData || imgData === "data:,") {
-            throw new Error("Il grafico non è stato generato correttamente.");
-        }
-
-        // Crea un nuovo documento PDF
         const pdf = new jsPDF();
-        pdf.text("Biorhythm Results", 10, 10); // Aggiunge un titolo al PDF
-        pdf.addImage(imgData, 'PNG', 10, 20, 180, 90); // Aggiunge il grafico al PDF
-        
-        // Salva il PDF
+        pdf.text("Biorhythm Results", 10, 10);
+        pdf.text(`Birth Date: ${biorhythmResults.birthdate}`, 10, 20);
+        pdf.text(`Target Date: ${biorhythmResults.targetDate}`, 10, 30);
+        pdf.text(`Physical: ${biorhythmResults.physical}%`, 10, 40);
+        pdf.text(`Emotional: ${biorhythmResults.emotional}%`, 10, 50);
+        pdf.text(`Intellectual: ${biorhythmResults.intellectual}%`, 10, 60);
+        pdf.text("Analysis:", 10, 70);
+        pdf.text(generateAnalysis(biorhythmResults), 10, 80, { maxWidth: 180 });
         pdf.save('biorhythm.pdf');
+        console.log("PDF generato con successo.");
     } catch (err) {
         console.error("Errore durante la generazione del PDF:", err);
         alert("An error occurred while generating the PDF. Please try again.");
