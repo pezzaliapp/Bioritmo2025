@@ -5,11 +5,8 @@ if ('serviceWorker' in navigator) {
         .catch(err => console.error("Service Worker Registration Failed:", err));
 }
 
-// Event listener per i pulsanti
+// Event listener per il calcolo
 document.getElementById('calculate-btn').addEventListener('click', calculateBiorhythm);
-document.getElementById('download-pdf').addEventListener('click', downloadPDF);
-
-let biorhythmResults = {}; // Variabile globale per salvare i risultati
 
 function calculateBiorhythm() {
     const birthdateInput = document.getElementById('birthdate');
@@ -33,42 +30,11 @@ function calculateBiorhythm() {
     const emotional = Math.sin((2 * Math.PI * daysLived) / 28);
     const intellectual = Math.sin((2 * Math.PI * daysLived) / 33);
 
-    biorhythmResults = {
-        birthdate: birthdate.toDateString(),
-        targetDate: targetDate.toDateString(),
-        physical: (physical * 100).toFixed(2),
-        emotional: (emotional * 100).toFixed(2),
-        intellectual: (intellectual * 100).toFixed(2),
-    };
-
     const resultsDiv = document.getElementById('output');
     resultsDiv.innerHTML = `
         <h2>Biorhythm Results</h2>
-        <p><strong>Birth Date:</strong> ${biorhythmResults.birthdate}</p>
-        <p><strong>Target Date:</strong> ${biorhythmResults.targetDate}</p>
-        <p><strong>Physical:</strong> ${biorhythmResults.physical}%</p>
-        <p><strong>Emotional:</strong> ${biorhythmResults.emotional}%</p>
-        <p><strong>Intellectual:</strong> ${biorhythmResults.intellectual}%</p>
-        <h3>Analysis:</h3>
-        <p>${generateAnalysis(biorhythmResults)}</p>
+        <p><strong>Physical:</strong> ${(physical * 100).toFixed(2)}%</p>
+        <p><strong>Emotional:</strong> ${(emotional * 100).toFixed(2)}%</p>
+        <p><strong>Intellectual:</strong> ${(intellectual * 100).toFixed(2)}%</p>
     `;
-}
-
-function generateAnalysis(results) {
-    let analysis = `On ${results.targetDate}, `;
-    analysis += `your physical cycle is ${results.physical}%, `;
-    analysis += `emotional cycle is ${results.emotional}%, `;
-    analysis += `and intellectual cycle is ${results.intellectual}%.`;
-    return analysis;
-}
-
-function downloadPDF() {
-    const pdf = new jsPDF();
-    pdf.text("Biorhythm Results", 10, 10);
-    pdf.text(`Birth Date: ${biorhythmResults.birthdate}`, 10, 20);
-    pdf.text(`Target Date: ${biorhythmResults.targetDate}`, 10, 30);
-    pdf.text(`Physical: ${biorhythmResults.physical}%`, 10, 40);
-    pdf.text(`Emotional: ${biorhythmResults.emotional}%`, 10, 50);
-    pdf.text(`Intellectual: ${biorhythmResults.intellectual}%`, 10, 60);
-    pdf.save("biorhythm.pdf");
 }
