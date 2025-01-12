@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#007BFF">
+    <link rel="manifest" href="manifest.json">
+    <title>Biorhythm Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Biorhythm Calculator</h1>
+        <p>This app calculates your biorhythms based on your birthdate. Note: This is for entertainment purposes only.</p>
+    </header>
+    <main>
+        <form id="biorhythm-form">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            
+            <label for="birthdate">Date of Birth:</label>
+            <input type="date" id="birthdate" name="birthdate" required>
+            
+            <label for="target-date">Target Date:</label>
+            <input type="date" id="target-date" name="target-date" value="">
+            
+            <button type="button" id="calculate-btn">Calculate</button>
+        </form>
+        <div id="output">
+            <h2>Results:</h2>
+            <canvas id="biorhythm-chart" width="400" height="300"></canvas>
+            <button id="download-pdf">Download PDF</button>
+        </div>
+    </main>
+    <script src="app.js"></script>
+</body>
+</html>
