@@ -5,17 +5,17 @@ if ('serviceWorker' in navigator) {
         .catch(err => console.error("Service Worker Registration Failed:", err));
 }
 
-// Calcolo del bioritmo
+// Event listener per i pulsanti
 document.getElementById('calculate-btn').addEventListener('click', calculateBiorhythm);
 document.getElementById('download-pdf').addEventListener('click', downloadPDF);
 
-let biorhythmResults = {}; // Salva i risultati per generare il PDF
+let biorhythmResults = {}; // Variabile globale per salvare i risultati
 
 function calculateBiorhythm() {
     const birthdateInput = document.getElementById('birthdate');
     const targetDateInput = document.getElementById('target-date');
 
-    // Controlla se la data di nascita è stata inserita
+    // Controlla che la data di nascita sia stata inserita
     if (!birthdateInput.value) {
         alert("Please enter your birth date.");
         return;
@@ -32,12 +32,12 @@ function calculateBiorhythm() {
 
     const daysLived = Math.floor((targetDate - birthdate) / (1000 * 60 * 60 * 24));
 
-    // Calcolo dei valori del bioritmo
+    // Calcolo dei bioritmi
     const physical = Math.sin((2 * Math.PI * daysLived) / 23);
     const emotional = Math.sin((2 * Math.PI * daysLived) / 28);
     const intellectual = Math.sin((2 * Math.PI * daysLived) / 33);
 
-    // Salva i risultati per il PDF
+    // Salva i risultati in un oggetto
     biorhythmResults = {
         birthdate: birthdate.toDateString(),
         targetDate: targetDate.toDateString(),
@@ -67,20 +67,21 @@ function generateAnalysis(results) {
     analysis += `and your intellectual cycle is at ${results.intellectual}%. `;
 
     if (results.physical > 80) {
-        analysis += "You are physically very energetic and ready for challenges.";
+        analysis += "You are physically very energetic and ready for challenges. ";
     } else if (results.physical < 20) {
-        analysis += "You might feel physically tired or less motivated today.";
+        analysis += "You might feel physically tired or less motivated today. ";
     }
 
     if (results.emotional > 80) {
-        analysis += " Emotionally, you are very positive and in a great mood.";
+        analysis += "Emotionally, you are very positive and in a great mood. ";
     } else if (results.emotional < 20) {
-        analysis += " You might feel emotionally sensitive or withdrawn.";
+        analysis += "You might feel emotionally sensitive or withdrawn. ";
+    }
 
     if (results.intellectual > 80) {
-        analysis += " Intellectually, your mind is sharp and ready for problem-solving.";
+        analysis += "Intellectually, your mind is sharp and ready for problem-solving. ";
     } else if (results.intellectual < 20) {
-        analysis += " You might find it harder to focus or process complex ideas.";
+        analysis += "You might find it harder to focus or process complex ideas.";
     }
 
     return analysis;
@@ -88,6 +89,7 @@ function generateAnalysis(results) {
 
 function downloadPDF() {
     try {
+        // Creazione del PDF
         const pdf = new jsPDF();
         pdf.text("Biorhythm Results", 10, 10);
         pdf.text(`Birth Date: ${biorhythmResults.birthdate}`, 10, 20);
