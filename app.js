@@ -92,17 +92,20 @@ function displayChart(daysLived, physical, emotional, intellectual) {
 
 function downloadPDF() {
     try {
-        // Recupera il canvas del grafico
+        // Recupera il canvas
         const canvas = document.getElementById('biorhythm-chart');
         
         // Verifica che il grafico esista
         if (!canvas) {
-            throw new Error("Il grafico non è stato generato. Calcola prima il bioritmo.");
+            throw new Error("Canvas non trovato. Assicurati di aver calcolato il bioritmo.");
         }
         
         // Converte il canvas in immagine
         const imgData = canvas.toDataURL('image/png');
-        
+        if (!imgData) {
+            throw new Error("Non è possibile convertire il grafico in immagine.");
+        }
+
         // Crea un nuovo documento PDF
         const pdf = new jsPDF();
         pdf.text("Biorhythm Results", 10, 10); // Aggiunge un titolo al PDF
@@ -112,6 +115,6 @@ function downloadPDF() {
         pdf.save('biorhythm.pdf');
     } catch (err) {
         console.error("Errore durante la generazione del PDF:", err);
-        alert("Si è verificato un errore durante la generazione del PDF. Assicurati che il grafico sia stato generato.");
+        alert("An error occurred while generating the PDF. Please try again.");
     }
 }
