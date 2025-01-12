@@ -13,6 +13,7 @@ function calculateBiorhythm() {
     const birthdateInput = document.getElementById('birthdate');
     const targetDateInput = document.getElementById('target-date');
 
+    // Controlla se la data di nascita è stata inserita
     if (!birthdateInput.value) {
         alert("Please enter your birth date.");
         return;
@@ -21,6 +22,7 @@ function calculateBiorhythm() {
     const birthdate = new Date(birthdateInput.value);
     const targetDate = targetDateInput.value ? new Date(targetDateInput.value) : new Date();
 
+    // Controlla che la data di nascita non sia successiva alla data target
     if (birthdate > targetDate) {
         alert("Birth date cannot be after the target date.");
         return;
@@ -28,6 +30,7 @@ function calculateBiorhythm() {
 
     const daysLived = Math.floor((targetDate - birthdate) / (1000 * 60 * 60 * 24));
 
+    // Calcolo dei valori del bioritmo
     const physical = Math.sin((2 * Math.PI * daysLived) / 23);
     const emotional = Math.sin((2 * Math.PI * daysLived) / 28);
     const intellectual = Math.sin((2 * Math.PI * daysLived) / 33);
@@ -38,6 +41,7 @@ function calculateBiorhythm() {
 function displayChart(daysLived, physical, emotional, intellectual) {
     const ctx = document.getElementById('biorhythm-chart').getContext('2d');
 
+    // Genera le etichette per il grafico (30 giorni attorno alla data target)
     const labels = Array.from({ length: 30 }, (_, i) => `Day ${i - 15}`);
     const physicalData = labels.map((_, i) =>
         Math.sin((2 * Math.PI * (daysLived + i - 15)) / 23)
@@ -49,6 +53,7 @@ function displayChart(daysLived, physical, emotional, intellectual) {
         Math.sin((2 * Math.PI * (daysLived + i - 15)) / 33)
     );
 
+    // Genera il grafico con Chart.js
     new Chart(ctx, {
         type: 'line',
         data: {
@@ -87,16 +92,26 @@ function displayChart(daysLived, physical, emotional, intellectual) {
 
 function downloadPDF() {
     try {
+        // Recupera il canvas del grafico
         const canvas = document.getElementById('biorhythm-chart');
-        if (!canvas) throw new Error("Canvas not found.");
-
-        const imgData = canvas.toDataURL('image/png'); // Converte il canvas in immagine
+        
+        // Verifica che il grafico esista
+        if (!canvas) {
+            throw new Error("Il grafico non è stato generato. Calcola prima il bioritmo.");
+        }
+        
+        // Converte il canvas in immagine
+        const imgData = canvas.toDataURL('image/png');
+        
+        // Crea un nuovo documento PDF
         const pdf = new jsPDF();
-        pdf.text("Biorhythm Results", 10, 10); // Titolo nel PDF
-        pdf.addImage(imgData, 'PNG', 10, 20, 180, 90); // Aggiunge l'immagine al PDF
-        pdf.save('biorhythm.pdf'); // Scarica il PDF
+        pdf.text("Biorhythm Results", 10, 10); // Aggiunge un titolo al PDF
+        pdf.addImage(imgData, 'PNG', 10, 20, 180, 90); // Aggiunge il grafico al PDF
+        
+        // Salva il PDF
+        pdf.save('biorhythm.pdf');
     } catch (err) {
-        console.error("Error during PDF generation:", err);
-        alert("An error occurred while generating the PDF. Please try again.");
+        console.error("Errore durante la generazione del PDF:", err);
+        alert("Si è verificato un errore durante la generazione del PDF. Assicurati che il grafico sia stato generato.");
     }
 }
